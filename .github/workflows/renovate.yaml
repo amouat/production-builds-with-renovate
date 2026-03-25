@@ -18,7 +18,7 @@ jobs:
       contents: write
 
     steps:
-    - uses: chainguard-dev/setup-chainctl@be0acd273acf04bfdf91f51198327e719f6af978 # v0.4.0
+    - uses: chainguard-dev/setup-chainctl@2cddd35a2f120d9973e58094dc6878c93cf58c28 # v0.5.1
       with:
         identity: 45a0c61ea6fd977f050c5fb9ac06a69eed764595/1c1c756dd9ec445d 
 
