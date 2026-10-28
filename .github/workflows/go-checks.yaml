@@ -1,0 +1,25 @@
+name: Go Vet and Test
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: cgr.dev/chainguard/go:latest-dev@sha256:d22e6f8bbef409464e7330c0058ba63fae61fd89c741182af997c9ba967b3ec0
+      options: --user root
+
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      -
+        name: Go vet
+        run: go vet ./...
+      -
+        name: Go test
+        run: go test ./...
