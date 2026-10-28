@@ -1,0 +1,27 @@
+name: Validate Renovate Config
+
+on:
+  pull_request:
+    paths:
+      - renovate.json
+      - .github/workflows/renovate-config.yaml
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          persist-credentials: false
+      -
+        # No Chainguard image is available for Renovate, so this uses upstream.
+        name: Validate renovate.json
+        uses: docker://docker.io/renovate/renovate:latest@sha256:a1fa316d623c6a48a366ad84a8513777706ba5b471f27b531a547bffa13e424b
+        with:
+          args: renovate-config-validator

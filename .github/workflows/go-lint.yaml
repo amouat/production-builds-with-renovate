@@ -1,0 +1,66 @@
+name: Go Lint
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  gofmt:
+    runs-on: ubuntu-latest
+    container:
+      image: cgr.dev/chainguard/go:latest-dev@sha256:d22e6f8bbef409464e7330c0058ba63fae61fd89c741182af997c9ba967b3ec0
+      options: --user root
+
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          persist-credentials: false
+      -
+        name: Check formatting
+        run: |
+          unformatted=$(gofmt -l .)
+          if [ -n "$unformatted" ]; then
+            echo "These files need gofmt:"
+            echo "$unformatted"
+            exit 1
+          fi
+
+  govulncheck:
+    runs-on: ubuntu-latest
+    container:
+      image: cgr.dev/chainguard/go:latest-dev@sha256:d22e6f8bbef409464e7330c0058ba63fae61fd89c741182af997c9ba967b3ec0
+      options: --user root
+
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          persist-credentials: false
+      -
+        # Installed from upstream (proxy.golang.org); no Chainguard image is available.
+        name: Install govulncheck
+        run: go install golang.org/x/vuln/cmd/govulncheck@latest
+      -
+        name: Run govulncheck
+        run: "$(go env GOPATH)/bin/govulncheck ./..."
+
+  golangci-lint:
+    runs-on: ubuntu-latest
+    # No Chainguard image is available for golangci-lint, so this uses upstream.
+    container:
+      image: docker.io/golangci/golangci-lint:v2.15.0@sha256:fbfcfd12a6f8d7f1b97b3362ca80fc2a244d46863148c73cb88e7793af96c481
+
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          persist-credentials: false
+      -
+        name: Run golangci-lint
+        run: golangci-lint run ./...
