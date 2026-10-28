@@ -1,0 +1,87 @@
+# migrator: on.pull_request.paths (renovate.json, .github/workflows/renovate-config.yaml): foreach.paths is the target, but the engine refuses foreach until it evaluates it (work item 12); filter dropped, jobs run on every change
+# migrator: uses (docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0...): step "Set up Docker Buildx": third-party action has no Chainguard mapping yet; step dropped
+# migrator: uses (docker/build-push-action@263435318d21b8e681c14492fe198d36...): step "Build (no push)": third-party action has no Chainguard mapping yet; step dropped
+# migrator: uses (docker://cgr.dev/chainguard/grype:latest@sha256:cc994ae91...): step "Scan image with Grype" runs a container action; not expressible; step dropped
+# migrator: step env (GRYPE_DB_CACHE_DIR): env on the `uses:` step "Scan image with Grype" has no target; variable dropped
+# migrator: job (build-and-scan): no step could be carried; job not emitted
+# migrator: uses (docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0...): step "Set up Docker Buildx": third-party action has no Chainguard mapping yet; step dropped
+# migrator: uses (docker/build-push-action@263435318d21b8e681c14492fe198d36...): step "Build (no push)": third-party action has no Chainguard mapping yet; step dropped
+# migrator: uses (docker://cgr.dev/chainguard/grype:latest@sha256:cc994ae91...): step "Scan image with Grype" runs a container action; not expressible; step dropped
+# migrator: step env (GRYPE_DB_CACHE_DIR): env on the `uses:` step "Scan image with Grype" has no target; variable dropped
+# migrator: job (build-and-scan): no step could be carried; job not emitted
+# migrator: uses (docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0...): step "Set up Docker Buildx": third-party action has no Chainguard mapping yet; step dropped
+# migrator: uses (docker/build-push-action@263435318d21b8e681c14492fe198d36...): step "Build (no push)": third-party action has no Chainguard mapping yet; step dropped
+# migrator: uses (docker://cgr.dev/chainguard/grype:latest@sha256:cc994ae91...): step "Scan image with Grype" runs a container action; not expressible; step dropped
+# migrator: step env (GRYPE_DB_CACHE_DIR): env on the `uses:` step "Scan image with Grype" has no target; variable dropped
+# migrator: job (build-and-scan): no step could be carried; job not emitted
+# migrator: uses (docker://docker.io/hadolint/hadolint:v2.15.1@sha256:32dac...): step "Lint Dockerfiles" runs a container action; not expressible; step dropped
+# migrator: job (hadolint): no step could be carried; job not emitted
+# migrator: uses (docker://docker.io/renovate/renovate:latest@sha256:a1fa31...): step "Validate renovate.json" runs a container action; not expressible; step dropped
+# migrator: job (validate): no step could be carried; job not emitted
+# migrator: uses (docker://docker.io/rhysd/actionlint:1.7.12@sha256:b1934ee...): step "Run actionlint" runs a container action; not expressible; step dropped
+# migrator: step if (${{ !cancelled() }}): step "Run zizmor" runs even after an earlier step fails on GitHub; the target's steps run in sequence and stop at the first failure, so the step is carried but is reached only when every earlier step succeeds
+# migrator: uses (docker://ghcr.io/zizmorcore/zizmor:latest@sha256:42d409db...): step "Run zizmor" runs a container action; not expressible; step dropped
+# migrator: job (lint): no step could be carried; job not emitted
+# migrator: network (NETWORK_MODE_EXTERNAL, no egress allowlist): GitHub runners have unrestricted egress; dry output is hermetic until the proof run records an egress allowlist
+version: 1
+checks:
+  # migrator: container (image: cgr.dev/chainguard/go:latest-dev@sha256:d22e6f8bbe...): jobs run in a declared environment, not a container image
+  gofmt:
+    environment: {}
+    steps:
+    - cmd:
+      - sh
+      - -e
+      - -c
+      - |
+        unformatted=$(gofmt -l .)
+        if [ -n "$unformatted" ]; then
+          echo "These files need gofmt:"
+          echo "$unformatted"
+          exit 1
+        fi
+      name: Check formatting
+  # migrator: container (image: docker.io/golangci/golangci-lint:v2.15.0@sha256:fb...): jobs run in a declared environment, not a container image
+  golangci-lint:
+    environment: {}
+    steps:
+    - cmd:
+      - sh
+      - -e
+      - -c
+      - golangci-lint run ./...
+      name: Run golangci-lint
+  # migrator: container (image: cgr.dev/chainguard/go:latest-dev@sha256:d22e6f8bbe...): jobs run in a declared environment, not a container image
+  govulncheck:
+    environment: {}
+    steps:
+    - cmd:
+      - sh
+      - -e
+      - -c
+      - go install golang.org/x/vuln/cmd/govulncheck@latest
+      name: Install govulncheck
+    - cmd:
+      - sh
+      - -e
+      - -c
+      - |
+        "$(go env GOPATH)/bin/govulncheck" ./...
+      name: Run govulncheck
+  # migrator: container (image: cgr.dev/chainguard/go:latest-dev@sha256:d22e6f8bbe...): jobs run in a declared environment, not a container image
+  test:
+    environment: {}
+    steps:
+    - cmd:
+      - sh
+      - -e
+      - -c
+      - go vet ./...
+      name: Go vet
+    - cmd:
+      - sh
+      - -e
+      - -c
+      - go test ./...
+      name: Go test
+
