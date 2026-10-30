@@ -38,7 +38,7 @@ jobs:
           outputs: type=docker,dest=image.tar
       -
         name: Scan image with Grype
-        uses: docker://cgr.dev/chainguard/grype:latest@sha256:cc994ae911df354748af9c63778f838d5d5c831412194f17e9b7f1ce40ea9e26
+        uses: docker://cgr.dev/chainguard/grype:latest@sha256:de6b916b27e933f12a6fa20ebb76ddda23a469d179c2ece546558cd229971ab3
         env:
           GRYPE_DB_CACHE_DIR: /tmp/grype-db
         with:
