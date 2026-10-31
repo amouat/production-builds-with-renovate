@@ -10,7 +10,7 @@ jobs:
   gofmt:
     runs-on: ubuntu-latest
     container:
-      image: cgr.dev/chainguard/go:latest-dev@sha256:d22e6f8bbef409464e7330c0058ba63fae61fd89c741182af997c9ba967b3ec0
+      image: cgr.dev/chainguard/go:latest-dev@sha256:7956385d08d0eff6a540fcb837963bb9dfc94ca5774c4d3edbd2c0983d234277
       options: --user root
 
     steps:
@@ -32,7 +32,7 @@ jobs:
   govulncheck:
     runs-on: ubuntu-latest
     container:
-      image: cgr.dev/chainguard/go:latest-dev@sha256:d22e6f8bbef409464e7330c0058ba63fae61fd89c741182af997c9ba967b3ec0
+      image: cgr.dev/chainguard/go:latest-dev@sha256:7956385d08d0eff6a540fcb837963bb9dfc94ca5774c4d3edbd2c0983d234277
       options: --user root
 
     steps:
