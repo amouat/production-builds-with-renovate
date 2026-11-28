@@ -22,6 +22,6 @@ jobs:
       -
         # No Chainguard image is available for Renovate, so this uses upstream.
         name: Validate renovate.json
-        uses: docker://docker.io/renovate/renovate:latest@sha256:a1fa316d623c6a48a366ad84a8513777706ba5b471f27b531a547bffa13e424b
+        uses: docker://docker.io/renovate/renovate:latest@sha256:d0358088501c7665688673c8932474b02517941703a16e970e8b4fcf235299cb
         with:
           args: renovate-config-validator
